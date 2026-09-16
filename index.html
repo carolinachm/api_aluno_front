@@ -26,124 +26,126 @@
         <!-- Mensagens -->
         <div id="mensagem" class="alert" role="alert"></div>
 
-        <div class="row g-4">
-            <!-- Formulário -->
-            <div class="col-lg-4">
-                <div class="card">
-                    <div class="card-header">
-                        <span id="tituloFormulario">Cadastrar Aluno</span>
-                    </div>
-                    <div class="card-body">
-                        <form id="formAluno">
-                            <!-- Código -->
-                            <input type="hidden" id="codigo">
-                            
-                            <!-- Nome -->
-                            <div class="mb-3">
-                                <label for="nome" class="form-label">Nome</label>
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    id="nome"
-                                    placeholder="Digite o nome do aluno"
-                                    required
-                                >
-                            </div>
-                            
-                            <!-- Nota 1 -->
-                            <div class="mb-3">
-                                <label for="nota1" class="form-label">Nota 1</label>
-                                <input
-                                    type="number"
-                                    class="form-control"
-                                    id="nota1"
-                                    min="0"
-                                    max="10"
-                                    step="0.01"
-                                    placeholder="0 a 10"
-                                    required
-                                >
-                            </div>
-                            
-                            <!-- Nota 2 -->
-                            <div class="mb-3">
-                                <label for="nota2" class="form-label">Nota 2</label>
-                                <input
-                                    type="number"
-                                    class="form-control"
-                                    id="nota2"
-                                    min="0"
-                                    max="10"
-                                    step="0.01"
-                                    placeholder="0 a 10"
-                                    required
-                                >
-                            </div>
-                            
-                            <!-- Botões -->
-                            <div class="d-grid gap-2">
-                                <button type="submit" class="btn btn-primary" id="btnSalvar">
-                                    Cadastrar
-                                </button>
-                                <button
-                                    type="button"
-                                    class="btn btn-secondary"
-                                    id="btnCancelar"
-                                    onclick="cancelarEdicao()"
-                                    style="display: none;"
-                                >
-                                    Cancelar edição
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
+        <!-- Botão Adicionar -->
+        <div class="mb-4">
+            <button 
+                type="button" 
+                class="btn btn-primary" 
+                data-bs-toggle="modal" 
+                data-bs-target="#modalAluno"
+                onclick="abrirModalCadastro()"
+            >
+                ➕ Cadastrar Novo Aluno
+            </button>
+        </div>
 
-            <!-- Lista -->
-            <div class="col-lg-8">
-                <div class="card">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <span>Alunos cadastrados</span>
+        <!-- Lista -->
+        <div class="card">
+            <div class="card-header">
+                <span>Alunos cadastrados</span>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Nome</th>
+                                <th>Nota 1</th>
+                                <th>Nota 2</th>
+                                <th>Média</th>
+                                <th>Situação</th>
+                                <th class="text-center">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelaAlunos"></tbody>
+                    </table>
+                </div>
+
+                <!-- Loading -->
+                <div id="loading" class="loading text-center p-4">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Carregando...</span>
                     </div>
-                    <div class="card-body p-0">
-                        <div class="table-responsive">
-                            <table class="table table-hover align-middle">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Nome</th>
-                                        <th>Nota 1</th>
-                                        <th>Nota 2</th>
-                                        <th>Média</th>
-                                        <th>Situação</th>
-                                        <th class="text-center">Ações</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tabelaAlunos"></tbody>
-                            </table>
-                        </div>
-                        
-                        <!-- Loading -->
-                        <div id="loading" class="loading text-center p-4">
-                            <div class="spinner-border text-primary" role="status">
-                                <span class="visually-hidden">Carregando...</span>
-                            </div>
-                            <div class="mt-2">Carregando alunos...</div>
-                        </div>
-                        
-                        <!-- Estado vazio -->
-                        <div id="estadoVazio" class="empty-state" style="display: none;">
-                            <div class="fs-1">📚</div>
-                            <h5>Nenhum aluno cadastrado</h5>
-                            <p class="mb-0">Cadastre o primeiro aluno utilizando o formulário.</p>
-                        </div>
-                    </div>
+                    <div class="mt-2">Carregando alunos...</div>
+                </div>
+
+                <!-- Estado vazio -->
+                <div id="estadoVazio" class="empty-state text-center py-5">
+                    <div class="fs-1">📚</div>
+                    <h5>Nenhum aluno cadastrado</h5>
+                    <p class="mb-0">Clique no botão acima para cadastrar o primeiro aluno.</p>
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- Modal de confirmação -->
+    <!-- MODAL: CADASTRAR/EDITAR ALUNO -->
+    <div class="modal fade" id="modalAluno" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="tituloModal">Cadastrar Aluno</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form id="formAluno">
+                    <div class="modal-body">
+                        <!-- Código -->
+                        <input type="hidden" id="codigo">
+                        
+                        <!-- Nome -->
+                        <div class="mb-3">
+                            <label for="nome" class="form-label">Nome</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="nome"
+                                placeholder="Digite o nome do aluno"
+                                required
+                            >
+                        </div>
+                        
+                        <!-- Nota 1 -->
+                        <div class="mb-3">
+                            <label for="nota1" class="form-label">Nota 1</label>
+                            <input
+                                type="number"
+                                class="form-control"
+                                id="nota1"
+                                min="0"
+                                max="10"
+                                step="0.01"
+                                placeholder="0 a 10"
+                                required
+                            >
+                        </div>
+                        
+                        <!-- Nota 2 -->
+                        <div class="mb-3">
+                            <label for="nota2" class="form-label">Nota 2</label>
+                            <input
+                                type="number"
+                                class="form-control"
+                                id="nota2"
+                                min="0"
+                                max="10"
+                                step="0.01"
+                                placeholder="0 a 10"
+                                required
+                            >
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary" id="btnSalvar">
+                            Cadastrar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: CONFIRMAÇÃO DE EXCLUSÃO -->
     <div class="modal fade" id="modalExcluir" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -164,7 +166,6 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
     <script>
         // ============================================================
         // CONFIGURAÇÃO
@@ -182,12 +183,13 @@
         const tabelaAlunos = document.getElementById("tabelaAlunos");
         const loading = document.getElementById("loading");
         const estadoVazio = document.getElementById("estadoVazio");
-        const tituloFormulario = document.getElementById("tituloFormulario");
+        const tituloModal = document.getElementById("tituloModal");
         const btnSalvar = document.getElementById("btnSalvar");
-        const btnCancelar = document.getElementById("btnCancelar");
         const mensagem = document.getElementById("mensagem");
 
-        // Modal
+        // Modais
+        const modalAlunoElement = document.getElementById("modalAluno");
+        const modalAluno = new bootstrap.Modal(modalAlunoElement);
         const modalExcluirElement = document.getElementById("modalExcluir");
         const modalExcluir = new bootstrap.Modal(modalExcluirElement);
         const nomeExcluir = document.getElementById("nomeExcluir");
@@ -201,6 +203,20 @@
             listarAlunos();
         });
 
+        // Fecha o modal e limpa o formulário quando o usuário clica em cancelar ou fora do modal
+        modalAlunoElement.addEventListener('hidden.bs.modal', () => {
+            limparFormulario();
+        });
+
+        // ============================================================
+        // ABRIR MODAL PARA CADASTRO
+        // ============================================================
+        function abrirModalCadastro() {
+            limparFormulario();
+            tituloModal.textContent = "Cadastrar Aluno";
+            btnSalvar.textContent = "Cadastrar";
+        }
+
         // ============================================================
         // GET /alunos
         // ============================================================
@@ -209,13 +225,13 @@
                 loading.style.display = "block";
                 estadoVazio.style.display = "none";
                 tabelaAlunos.innerHTML = "";
-
+                
                 const resposta = await fetch(`${API_URL}/alunos`, { method: "GET" });
                 if (!resposta.ok) throw new Error("Não foi possível carregar os alunos.");
-
+                
                 const alunos = await resposta.json();
                 loading.style.display = "none";
-
+                
                 if (!alunos || alunos.length === 0) {
                     estadoVazio.style.display = "block";
                     return;
@@ -226,7 +242,7 @@
                     linha.innerHTML = `
                         <td>
                             <strong>${escapeHTML(aluno.nome)}</strong>
-                            <div class="codigo">${escapeHTML(aluno.codigo)}</div>
+                            <div class="codigo small text-muted">${escapeHTML(aluno.codigo)}</div>
                         </td>
                         <td><span class="nota">${formatarNota(aluno.nota1)}</span></td>
                         <td><span class="nota">${formatarNota(aluno.nota2)}</span></td>
@@ -237,12 +253,7 @@
                                 <button
                                     class="btn btn-sm btn-outline-primary"
                                     title="Editar"
-                                    onclick="editarAluno(
-                                        '${aluno.codigo}',
-                                        '${escapeAttribute(aluno.nome)}',
-                                        '${aluno.nota1}',
-                                        '${aluno.nota2}'
-                                    )"
+                                    onclick='editarAluno(${JSON.stringify(aluno)})'
                                 >✏️</button>
                                 <button
                                     class="btn btn-sm btn-outline-danger"
@@ -278,7 +289,7 @@
             try {
                 btnSalvar.disabled = true;
                 btnSalvar.innerHTML = `<span class="spinner-border spinner-border-sm"></span> Cadastrando...`;
-
+                
                 const resposta = await fetch(`${API_URL}/alunos`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -292,7 +303,8 @@
 
                 const alunoCadastrado = await resposta.json();
                 mostrarMensagem(`Aluno "${alunoCadastrado.nome}" cadastrado com sucesso!`, "success");
-                limparFormulario();
+                
+                modalAluno.hide();
                 await listarAlunos();
             } catch (erro) {
                 mostrarMensagem(erro.message, "danger");
@@ -318,7 +330,7 @@
             try {
                 btnSalvar.disabled = true;
                 btnSalvar.innerHTML = `<span class="spinner-border spinner-border-sm"></span> Salvando...`;
-
+                
                 const resposta = await fetch(
                     `${API_URL}/alunos/${encodeURIComponent(codigo)}`,
                     {
@@ -335,7 +347,8 @@
 
                 const alunoAtualizado = await resposta.json();
                 mostrarMensagem(`Aluno "${alunoAtualizado.nome}" alterado com sucesso!`, "success");
-                limparFormulario();
+                
+                modalAluno.hide();
                 await listarAlunos();
             } catch (erro) {
                 mostrarMensagem(erro.message, "danger");
@@ -354,7 +367,7 @@
             try {
                 btnConfirmarExclusao.disabled = true;
                 btnConfirmarExclusao.innerHTML = `<span class="spinner-border spinner-border-sm"></span> Excluindo...`;
-
+                
                 const resposta = await fetch(
                     `${API_URL}/alunos/${encodeURIComponent(codigoAlunoExcluir)}`,
                     { method: "DELETE" }
@@ -367,11 +380,6 @@
 
                 modalExcluir.hide();
                 mostrarMensagem("Aluno excluído com sucesso!", "success");
-
-                if (codigoInput.value === codigoAlunoExcluir) {
-                    limparFormulario();
-                }
-
                 await listarAlunos();
             } catch (erro) {
                 mostrarMensagem(erro.message, "danger");
@@ -383,10 +391,11 @@
         }
 
         // ============================================================
-        // FORMULÁRIO
+        // SUBMIT DO FORMULÁRIO
         // ============================================================
         formAluno.addEventListener("submit", async function(event) {
             event.preventDefault();
+            
             if (codigoInput.value) {
                 await atualizarAluno();
             } else {
@@ -395,29 +404,19 @@
         });
 
         // ============================================================
-        // EDITAR
+        // EDITAR ALUNO — ABRE MODAL COM DADOS
         // ============================================================
-        function editarAluno(codigo, nome, nota1, nota2) {
-            codigoInput.value = codigo;
-            nomeInput.value = nome;
-            nota1Input.value = nota1;
-            nota2Input.value = nota2;
-            tituloFormulario.textContent = "Alterar Aluno";
+        function editarAluno(aluno) {
+            codigoInput.value = aluno.codigo;
+            nomeInput.value = aluno.nome;
+            nota1Input.value = aluno.nota1;
+            nota2Input.value = aluno.nota2;
+            
+            tituloModal.textContent = "Alterar Aluno";
             btnSalvar.textContent = "Salvar alterações";
-            btnCancelar.style.display = "block";
-
-            document.querySelector(".col-lg-4").scrollIntoView({
-                behavior: "smooth",
-                block: "start"
-            });
+            
+            modalAluno.show();
             nomeInput.focus();
-        }
-
-        // ============================================================
-        // CANCELAR EDIÇÃO
-        // ============================================================
-        function cancelarEdicao() {
-            limparFormulario();
         }
 
         // ============================================================
@@ -426,9 +425,8 @@
         function limparFormulario() {
             formAluno.reset();
             codigoInput.value = "";
-            tituloFormulario.textContent = "Cadastrar Aluno";
+            tituloModal.textContent = "Cadastrar Aluno";
             btnSalvar.textContent = "Cadastrar";
-            btnCancelar.style.display = "none";
         }
 
         // ============================================================
@@ -465,27 +463,20 @@
         }
 
         // ============================================================
-        // BADGE DA SITUAÇÃO
+        // UTILITÁRIOS
         // ============================================================
         function criarBadgeSituacao(situacao) {
             let classe = "bg-secondary";
             if (situacao === "Aprovado(a)") classe = "bg-success";
             else if (situacao === "Em Recuperação") classe = "bg-warning text-dark";
             else if (situacao === "Reprovado(a)") classe = "bg-danger";
-
             return `<span class="badge ${classe}">${escapeHTML(situacao)}</span>`;
         }
 
-        // ============================================================
-        // FORMATAÇÃO
-        // ============================================================
         function formatarNota(nota) {
             return Number(nota).toFixed(2);
         }
 
-        // ============================================================
-        // MENSAGEM
-        // ============================================================
         function mostrarMensagem(texto, tipo) {
             mensagem.className = `alert alert-${tipo}`;
             mensagem.textContent = texto;
@@ -495,9 +486,6 @@
             }, 4000);
         }
 
-        // ============================================================
-        // SEGURANÇA
-        // ============================================================
         function escapeHTML(valor) {
             return String(valor)
                 .replaceAll("&", "&amp;")
